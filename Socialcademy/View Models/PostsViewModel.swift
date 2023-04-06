@@ -3,14 +3,14 @@ import Foundation
 
 @MainActor
 class PostsViewModel: ObservableObject {
-    //@Published var posts = [Post.testPost]
-    //@Published var posts = [Post]()
-    
     @Published var posts: Loadable<[Post]> = .loading
+    
     private let postsRepository: PostsRepositoryProtocol
+    
     init(postsRepository: PostsRepositoryProtocol = PostsRepository()) {
         self.postsRepository = postsRepository
     }
+    
     func fetchPosts() {
         Task {
             do {
@@ -21,12 +21,11 @@ class PostsViewModel: ObservableObject {
             }
         }
     }
-     
+    
     func makeCreateAction() -> NewPostForm.CreateAction {
         return { [weak self] post in
             try await self?.postsRepository.create(post)
             self?.posts.value?.insert(post, at: 0)
         }
     }
-    
 }

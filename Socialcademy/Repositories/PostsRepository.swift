@@ -7,14 +7,15 @@ import FirebaseFirestoreSwift
 
 #if DEBUG
 struct PostsRepositoryStub: PostsRepositoryProtocol {
+    let state: Loadable<[Post]>
+ 
     func fetchPosts() async throws -> [Post] {
-        return []
+        return try await state.simulate()
     }
  
     func create(_ post: Post) async throws {}
 }
 #endif
-
 protocol PostsRepositoryProtocol {
     func fetchPosts() async throws -> [Post]
     func create(_ post: Post) async throws
