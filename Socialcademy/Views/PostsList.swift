@@ -1,21 +1,12 @@
-//
-//  PostList.swift
-//  Socialcademy
-//
-//  Created by Ilya on 04.04.2023.
-//
 
-import Foundation
 import SwiftUI
 
 struct PostsList: View {
-    
-    // private var posts = [Post.testPost]
     @StateObject var viewModel = PostsViewModel()
-    @State private var showNewPostForm = false
-
+    
     @State private var searchText = ""
- 
+    @State private var showNewPostForm = false
+    
     var body: some View {
         NavigationView {
             List(viewModel.posts) { post in
@@ -32,10 +23,15 @@ struct PostsList: View {
                     Label("New Post", systemImage: "square.and.pencil")
                 }
             }
-        }
-        .sheet(isPresented: $showNewPostForm) {
-            NewPostForm(createAction: viewModel.makeCreateAction())
+            .sheet(isPresented: $showNewPostForm) {
+                NewPostForm(createAction: viewModel.makeCreateAction())
+            }
         }
     }
-    
+}
+
+struct PostsList_Previews: PreviewProvider {
+    static var previews: some View {
+        PostsList()
+    }
 }

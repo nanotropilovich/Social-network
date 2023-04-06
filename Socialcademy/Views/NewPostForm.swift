@@ -1,20 +1,16 @@
-//
-//  NewPostForm.swift
-//  Socialcademy
-//
-//  Created by Ilya on 04.04.2023.
-//
 
-import Foundation
 import SwiftUI
 
 
 struct NewPostForm: View {
-    @State private var post = Post(title: "", content: "", authorName: "")
-    @Environment(\.dismiss) private var dismiss
-    typealias CreateAction = (Post) -> Void
-        let createAction: CreateAction
+    typealias CreateAction = (Post) async throws -> Void
     
+    let createAction: CreateAction
+    
+    @State private var post = Post(title: "", content: "", authorName: "")
+    @State private var state = FormState.idle
+    
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         NavigationView {
@@ -28,7 +24,11 @@ struct NewPostForm: View {
                         .multilineTextAlignment(.leading)
                 }
                 Button(action: createPost) {
-                    Text("Create Post")
+                    if state == .working {
+                        ProgressView()
+                    } else {
+                        Text("Create Post")
+                    }
                 }
                 .font(.headline)
                 .frame(maxWidth: .infinity)
@@ -39,12 +39,40 @@ struct NewPostForm: View {
             .onSubmit(createPost)
             .navigationTitle("New Post")
         }
+        .disabled(state == .working)
+        .alert("Cannot Create Post", isPresented: $state.isError, actions: {}) {
+            Text("Sorry, something went wrong.")
+        }
     }
     
-    
     private func createPost() {
-        createAction(post)
-        dismiss()
+        Task {
+            state = .working
+            do {
+                try await createAction(post)
+                dismiss()
+            } catch {
+                print("[NewPostForm] Cannot create post: \(error)")
+                state = .error
+            }
+        }
+    }
+}
+
+
+private extension NewPostForm {
+    enum FormState {
+        case idle, working, error
+        
+        var isError: Bool {
+            get {
+                self == .error
+            }
+            set {
+                guard !newValue else { return }
+                self = .idle
+            }
+        }
     }
 }
 

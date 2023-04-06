@@ -1,16 +1,9 @@
-//
-//  PostRow.swift
-//  Socialcademy
-//
-//  Created by Ilya on 04.04.2023.
-//
 
-import Foundation
 import SwiftUI
 
 struct PostRow: View {
     let post: Post
- 
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -30,6 +23,7 @@ struct PostRow: View {
         .padding(.vertical)
     }
 }
+
 struct PostRow_Previews: PreviewProvider {
     static var previews: some View {
         List {
