@@ -7,6 +7,8 @@ import FirebaseFirestoreSwift
 
 #if DEBUG
 struct PostsRepositoryStub: PostsRepositoryProtocol {
+    func delete(_ post: Post) async throws {}
+    
     let state: Loadable<[Post]>
  
     func fetchPosts() async throws -> [Post] {
@@ -17,11 +19,15 @@ struct PostsRepositoryStub: PostsRepositoryProtocol {
 }
 #endif
 protocol PostsRepositoryProtocol {
+    func delete(_ post: Post) async throws
     func fetchPosts() async throws -> [Post]
     func create(_ post: Post) async throws
 }
 struct PostsRepository: PostsRepositoryProtocol {
-   
+    func delete(_ post: Post) async throws {
+        let document = PostsRepository.postsReference.document(post.id.uuidString)
+        try await document.delete()
+    }
     static let postsReference = Firestore.firestore().collection("posts")
     
     func create(_ post: Post) async throws {
