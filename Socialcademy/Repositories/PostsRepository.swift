@@ -16,17 +16,33 @@ struct PostsRepositoryStub: PostsRepositoryProtocol {
     }
  
     func create(_ post: Post) async throws {}
+    
+    func favorite(_ post: Post) async throws {}
+ 
+    func unfavorite(_ post: Post) async throws {}
 }
 #endif
 protocol PostsRepositoryProtocol {
     func delete(_ post: Post) async throws
     func fetchPosts() async throws -> [Post]
     func create(_ post: Post) async throws
+    
+    func favorite(_ post: Post) async throws
+    func unfavorite(_ post: Post) async throws
 }
 struct PostsRepository: PostsRepositoryProtocol {
+    let postsReference = Firestore.firestore().collection("posts_v1")
     func delete(_ post: Post) async throws {
         let document = PostsRepository.postsReference.document(post.id.uuidString)
         try await document.delete()
+    }
+    func unfavorite(_ post: Post) async throws {
+        let document = PostsRepository.postsReference.document(post.id.uuidString)
+        try await document.setData(["isFavorite": false], merge: true)
+    }
+    func favorite(_ post: Post) async throws {
+        let document = PostsRepository.postsReference.document(post.id.uuidString)
+        try await document.setData(["isFavorite": true], merge: true)
     }
     static let postsReference = Firestore.firestore().collection("posts")
     
