@@ -24,8 +24,8 @@ This is a Social Network app implemented in Swift 🚀, using Firebase Firestore
 
 1. Установите Xcode, если еще не установлен.
 2. Установите CocoaPods, если еще не установлен.
-3. Клонируйте репозиторий: `git clone https://github.com/yourusername/supercoolsocialnetwork.git`
-4. Перейдите в директорию проекта: `cd supercoolsocialnetwork`
+3. Клонируйте репозиторий: `git clone https://github.com/yourusername/social-network.git`
+4. Перейдите в директорию проекта: `cd social-network`
 5. Установите зависимости: `pod install`
 6. Откройте файл `SuperCoolSocialNetwork.xcworkspace` в Xcode.
 7. Запустите проект на симуляторе или реальном устройстве.
